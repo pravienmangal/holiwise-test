@@ -1,18 +1,18 @@
 import React from 'react'
-import { ArrowUp } from 'react-feather'
+import { Heart, ArrowUp, Trash2 } from 'react-feather'
 
 type ImageCardProps = {
   backgroundImage: string
   title: string
-  icons?: React.ReactNode
   votes?: number
+  onRemove?: () => void
 }
 
 const ImageCard: React.FC<ImageCardProps> = ({
   backgroundImage,
   title,
-  icons,
   votes,
+  onRemove,
 }) => {
   return (
     <div className="relative flex flex-col w-64 rounded-[11px] overflow-hidden">
@@ -20,15 +20,23 @@ const ImageCard: React.FC<ImageCardProps> = ({
         className="relative w-full h-40 bg-cover bg-center rounded-[11px]"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <div className="absolute top-2 right-2 flex items-start justify-start p-2 bg-white w-10 h-10 rounded-[11px]">
-          {icons}
+        {onRemove && (
+          <div className="absolute top-2 left-2 rounded-[11px] bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer w-10 h-10 flex items-center justify-center">
+            <Trash2 onClick={onRemove} />
+          </div>
+        )}
+        <div className="absolute top-2 right-2 rounded-[11px] w-10 h-10 bg-white shadow-md flex justify-center items-center">
+          <Heart className="text-black fill-current" />
         </div>
       </div>
       <div className="mt-2 p-2 font-semibold">{title}</div>
       {votes && (
-        <div className="flex mt-2 p-2 font-semibold bg-gray-300 border rounded-[6px]">
-          <ArrowUp />
-          {votes} You
+        <div className="flex font-semibold items-center">
+          <div className="flex mr-2 p-1 font-semibold bg-gray-100 border rounded-[11px] cursor-pointer">
+            <ArrowUp />
+            {votes}
+          </div>
+          You
         </div>
       )}
     </div>

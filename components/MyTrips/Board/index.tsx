@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDrop } from 'react-dnd'
 import { useRouter } from 'next/navigation'
-import { Heart } from 'react-feather'
 import ImageCard from '@/components/ImageCard'
 import { Destination } from '../MyTrips.types'
 
@@ -46,10 +45,9 @@ const Board: React.FC = () => {
   return (
     <div
       ref={drop as unknown as React.RefObject<HTMLDivElement>}
-      className={`p-4 border-2 border-dashed ${
+      className={`p-4 border-2 border-dashed min-h-[200px] ${
         isOver ? 'bg-green-100' : 'bg-white'
       }`}
-      style={{ minHeight: '200px' }}
     >
       {droppedItems.length === 0 ? (
         <p>Drop items here</p>
@@ -59,7 +57,6 @@ const Board: React.FC = () => {
             key={item.id}
             backgroundImage={item.imageUrl}
             title={item.title}
-            icons={<Heart className="text-bloack fill-current" />}
           />
         ))
       )}

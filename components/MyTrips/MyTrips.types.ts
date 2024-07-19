@@ -3,6 +3,5 @@ export interface Destination {
   imageUrl: string
   title: string
   favourite: boolean
-  votes: number
   category?: string
 }

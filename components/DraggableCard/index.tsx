@@ -1,7 +1,6 @@
 import React from 'react'
 import { useDrag } from 'react-dnd'
 import ImageCard from '@/components/ImageCard'
-import { Heart } from 'react-feather'
 import { Destination } from '../MyTrips/MyTrips.types'
 
 const ItemType = 'ITEM'
@@ -21,11 +20,7 @@ const DraggableCard: React.FC<Destination> = ({ id, imageUrl, title }) => {
       className={`p-2 ${isDragging ? 'opacity-50' : ''} cursor-grab`}
       style={{ opacity: isDragging ? 0.5 : 1 }}
     >
-      <ImageCard
-        backgroundImage={imageUrl}
-        title={title}
-        icons={<Heart className="text-blck fill-current" />}
-      />
+      <ImageCard backgroundImage={imageUrl} title={title} />
     </div>
   )
 }
