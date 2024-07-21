@@ -2,9 +2,12 @@
 
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Heart, Trash2 } from 'react-feather'
 import ImageCard from '@/components/ImageCard'
 import { Destination } from '@/components/MyTrips/MyTrips.types'
+import { envConfig } from '@/config/envConfig'
+
+const { baseURL, droppedItems } = envConfig
+const API_URL = `${baseURL}${droppedItems}`
 
 export default function Board() {
   const searchParams = useSearchParams()
@@ -22,16 +25,37 @@ export default function Board() {
     return initialDestinations
   })
 
-  const handleRemove = (id: string) => {
-    const updatedDestinations = destinations.filter((dest) => dest.id !== id)
-    setDestinations(updatedDestinations)
+  const handleRemove = async (id: string) => {
+    try {
+      const deleteResponse = await fetch(`${API_URL}/${id}`, {
+        method: 'DELETE',
+      })
 
-    localStorage.setItem('droppedItems', JSON.stringify(updatedDestinations))
+      if (deleteResponse.ok) {
+        const updatedDestinations = destinations.filter(
+          (dest) => dest.id !== id
+        )
+        setDestinations(updatedDestinations)
 
-    const newItemsParam = encodeURIComponent(
-      JSON.stringify(updatedDestinations)
-    )
-    window.history.replaceState(null, '', `?items=${newItemsParam}`)
+        localStorage.setItem(
+          'droppedItems',
+          JSON.stringify(updatedDestinations)
+        )
+
+        // Update the URL parameters
+        const newItemsParam = encodeURIComponent(
+          JSON.stringify(updatedDestinations)
+        )
+        window.history.replaceState(null, '', `?items=${newItemsParam}`)
+      } else {
+        console.error(
+          'Failed to delete item from API:',
+          await deleteResponse.text()
+        )
+      }
+    } catch (error) {
+      console.error('Error removing item:', error)
+    }
   }
 
   return (
