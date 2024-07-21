@@ -3,6 +3,14 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import {
+  FilePlus,
+  AlignLeft,
+  ArrowLeft,
+  ArrowRight,
+  Clipboard,
+  LogOut,
+} from 'react-feather'
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState<boolean>(false)
@@ -19,40 +27,48 @@ export default function Sidebar() {
     >
       <nav>
         <div className="flex items-center justify-center gap-2 pl-3.5 pr-2 lg:justify-start">
-          <div className="flex shrink items-center gap-2 pt-4">
-            <div className="inline-flex items-center justify-center gap-2 rounded-[11px] text-base font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-100 focus-visible:ring-offset-2 disabled:pointer-events-none text-black">
+          <div className="flex shrink items-center gap-2 pt-4 w-[130px]">
+            <div className="flex items-center justify-center text-grey-darker">
               <Image
-                src="/images/holiwise.svg"
+                src="/images/holiwise-logo.png"
                 alt="Holiwise Logo"
-                width={240}
-                height={80}
+                width={60}
+                height={60}
               />
+              {!collapsed && (
+                <Image
+                  className="mt-2 ml-1"
+                  src="/images/holiwise-text.png"
+                  alt="Holiwise Logo"
+                  width={180}
+                  height={48}
+                />
+              )}
               <span className="sr-only">Holiwise logo</span>
             </div>
           </div>
-          <button className="items-center justify-center gap-2 text-base font-medium ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-100 focus-visible:ring-offset-2 disabled:pointer-events-none text-black hidden h-6 w-6 shrink-0 rounded-full bg-gray-50 opacity-0 transition-opacity focus:opacity-100 group-hover:opacity-100 lg:inline-flex">
-            <span className="sr-only">Collapse side menu</span>
+        </div>
+        <div className="pt-4 px-4 border-b-2">
+          <button onClick={handleCollapse}>
+            <div className="flex pt-4 pb-2">
+              <AlignLeft className="stroke-content-secondary peer-disabled:stroke-grey-light" />
+              {!collapsed && (
+                <p className="text-sm uppercase ml-2">Collapse Menu</p>
+              )}
+            </div>
           </button>
         </div>
-        <button onClick={handleCollapse}>
-          <div className="flex px-4 pt-4 pb-2">
-            {/* <Menu className="stroke-content-secondary peer-disabled:stroke-grey-light" /> */}
-            {!collapsed && (
-              <p className="text-sm uppercase ml-2">Collapse Menu</p>
-            )}
-          </div>
-        </button>
-
-        <div className="pt-4 px-4">
+        <div className="pt-8 px-4">
           <ul>
             <li className="mb-4 text-sm">
               <Link href="/" className="flex items-center text-grey-darker">
-                {/* <Layers className="h-[22px] stroke-content-secondary peer-disabled:stroke-grey-light" /> */}
+                <FilePlus className="h-[22px] stroke-content-secondary peer-disabled:stroke-grey-light" />
                 {!collapsed && <p className="ml-2">My trips</p>}
               </Link>
             </li>
             <li className="mb-4 text-sm">
               <Link href="#" className="flex items-center text-grey-darker">
+                <Clipboard className="h-[22px] stroke-content-secondary peer-disabled:stroke-grey-light" />
                 {!collapsed && <p className="ml-2">Itineraries</p>}
               </Link>
             </li>
@@ -61,7 +77,7 @@ export default function Sidebar() {
 
         <button onClick={() => {}}>
           <div className="flex px-4 pt-4 pb-2">
-            {/* <LogOut className="stroke-content-secondary peer-disabled:stroke-grey-light" /> */}
+            <LogOut className="stroke-content-secondary peer-disabled:stroke-grey-light" />
             {!collapsed && <p className="text-sm ml-2">Log out</p>}
           </div>
         </button>

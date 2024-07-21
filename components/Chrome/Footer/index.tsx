@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
         By{' '}
         <Image
-          src="/images/holiwise.svg"
+          src="/images/holiwise-full.svg"
           alt="Holiwise Logo"
           width={100}
           height={24}
