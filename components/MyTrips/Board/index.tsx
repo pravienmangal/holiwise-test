@@ -92,30 +92,30 @@ const Board: React.FC = () => {
   }
 
   return (
-    <div
-      ref={drop as unknown as React.RefObject<HTMLDivElement>}
-      className={`p-4 border-2 border-dashed min-h-[200px] ${
-        isOver ? 'bg-green-100' : 'bg-white'
-      }`}
-    >
-      {droppedItems.length === 0 ? (
-        <p>Drop items here</p>
-      ) : (
-        droppedItems.map((item) => (
-          <ImageCard
-            key={item.id}
-            backgroundImage={item.imageUrl}
-            title={item.title}
-          />
-        ))
-      )}
-      <button
-        onClick={handleClick}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+    <button onClick={handleClick}>
+      <div
+        ref={drop as unknown as React.RefObject<HTMLDivElement>}
+        className={`w-[400px] h-[250px] flex flex-col justify-between relative cursor-pointer`}
       >
-        Go to Board Page
-      </button>
-    </div>
+        <div className="w-[120px] h-4 bg-primary-darker rounded-t-lg shadow-black"></div>
+        <div className="flex flex-col justify-center items-center h-full bg-primary border border-[#d0d0d5] rounded-lg rounded-tl-none shadow-md overflow-hidden">
+          {droppedItems.length === 0 ? (
+            <p className="text-center text-gray-500 font-semibold">
+              Drop items here
+            </p>
+          ) : (
+            droppedItems.map((item) => (
+              <ImageCard
+                key={item.id}
+                backgroundImage={item.imageUrl}
+                title={item.title}
+                variation="secondary"
+              />
+            ))
+          )}
+        </div>
+      </div>
+    </button>
   )
 }
 

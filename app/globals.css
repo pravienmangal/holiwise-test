@@ -18,6 +18,9 @@
 
 body {
   color: rgb(var(--foreground-rgb));
+
+  --primary: #a2dfff;
+  --primary-darker: #6ab9e2;
 }
 
 @layer utilities {
