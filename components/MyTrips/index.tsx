@@ -6,7 +6,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import DraggableCard from '@/components/DraggableCard'
 import dynamic from 'next/dynamic'
 import AddBoard from '../AddBoard'
-import { Destination, Board as BoardType } from './MyTrips.types'
+import { Board as BoardType } from './MyTrips.types'
 import { envConfig } from '@/config/envConfig'
 import { destinations as initialDestinations } from '@/data/destnations'
 

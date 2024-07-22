@@ -3,14 +3,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import {
-  FilePlus,
-  AlignLeft,
-  ArrowLeft,
-  ArrowRight,
-  Clipboard,
-  LogOut,
-} from 'react-feather'
+import { FilePlus, AlignLeft, Clipboard, LogOut } from 'react-feather'
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState<boolean>(false)
@@ -31,7 +24,7 @@ export default function Sidebar() {
             <div className="flex items-center justify-center text-grey-darker">
               <Image
                 src="/images/holiwise-logo.png"
-                alt="Holiwise Logo"
+                alt="Holiwise Logo Image"
                 width={60}
                 height={60}
               />
@@ -39,7 +32,7 @@ export default function Sidebar() {
                 <Image
                   className="mt-2 ml-1"
                   src="/images/holiwise-text.png"
-                  alt="Holiwise Logo"
+                  alt="Holiwise Text Image"
                   width={180}
                   height={48}
                 />
