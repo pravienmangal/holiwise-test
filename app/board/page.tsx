@@ -67,9 +67,7 @@ const BoardContent = () => {
     }
   }, [boardId])
 
-  useEffect(() => {
-    console.log('boardId:', boardId)
-  }, [boardId])
+  useEffect(() => {}, [boardId])
 
   const handleRemoveClick = (destination: Destination) => {
     setDestinationToRemove(destination)
