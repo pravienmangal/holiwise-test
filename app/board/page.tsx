@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation' // Import useRouter for navigation
+import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, Trash2 } from 'react-feather'
 import Link from 'next/link'
@@ -16,7 +16,7 @@ const { baseURL } = envConfig
 export default function Board() {
   const searchParams = useSearchParams()
   const items = searchParams.get('items')
-  const boardId = searchParams.get('id') // Get board ID from query params
+  const boardId = searchParams.get('id')
 
   const [destinations, setDestinations] = useState<Destination[]>(() => {
     let initialDestinations: Destination[] = []
@@ -35,11 +35,11 @@ export default function Board() {
   } | null>(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false) // State for delete confirmation modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [destinationToRemove, setDestinationToRemove] =
     useState<Destination | null>(null)
 
-  const router = useRouter() // Initialize useRouter for navigation
+  const router = useRouter()
 
   useEffect(() => {
     if (boardId) {
@@ -148,7 +148,7 @@ export default function Board() {
         })
 
         if (deleteResponse.ok) {
-          router.push('/') // Navigate to home page
+          router.push('/')
         } else {
           console.error('Failed to delete board:', await deleteResponse.text())
         }

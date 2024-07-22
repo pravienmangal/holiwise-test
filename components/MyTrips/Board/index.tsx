@@ -76,7 +76,7 @@ const Board: React.FC<BoardProps> = ({ id, name, description, avatar }) => {
     const encodedItems = encodeURIComponent(JSON.stringify(droppedItems))
     const queryParams = new URLSearchParams({
       items: encodedItems,
-      id: id, // Include the id in the query parameters
+      id: id,
     })
     router.push(`/board?${queryParams.toString()}`)
   }
