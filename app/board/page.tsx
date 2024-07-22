@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, Trash2 } from 'react-feather'
@@ -13,7 +13,7 @@ import { envConfig } from '@/config/envConfig'
 
 const { baseURL } = envConfig
 
-export default function Board() {
+const BoardContent = () => {
   const searchParams = useSearchParams()
   const items = searchParams.get('items')
   const boardId = searchParams.get('id')
@@ -221,3 +221,11 @@ export default function Board() {
     </div>
   )
 }
+
+const Board = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <BoardContent />
+  </Suspense>
+)
+
+export default Board

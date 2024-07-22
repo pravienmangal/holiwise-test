@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useDrop } from 'react-dnd'
 import { useRouter } from 'next/navigation'
 import ImageCard from '@/components/ImageCard'
@@ -17,7 +17,7 @@ interface BoardProps {
   avatar: string
 }
 
-const Board: React.FC<BoardProps> = ({ id, name, description, avatar }) => {
+const BoardContent: React.FC<BoardProps> = ({ id, name, description }) => {
   const [droppedItems, setDroppedItems] = useState<Destination[]>([])
 
   useEffect(() => {
@@ -114,5 +114,11 @@ const Board: React.FC<BoardProps> = ({ id, name, description, avatar }) => {
     </div>
   )
 }
+
+const Board: React.FC<BoardProps> = (props) => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <BoardContent {...props} />
+  </Suspense>
+)
 
 export default Board

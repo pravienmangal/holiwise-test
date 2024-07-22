@@ -1,16 +1,20 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import DraggableCard from '@/components/DraggableCard'
-import Board from './Board'
+import dynamic from 'next/dynamic'
 import AddBoard from '../AddBoard'
 import { Destination, Board as BoardType } from './MyTrips.types'
 import { envConfig } from '@/config/envConfig'
 import { destinations as initialDestinations } from '@/data/destnations'
 
 const { baseURL, boards } = envConfig
+
+const Board = dynamic(() => import('./Board'), {
+  suspense: true,
+})
 
 const MyTrips: React.FC = () => {
   const [myBoards, setMyBoards] = useState<BoardType[]>([])
@@ -58,7 +62,9 @@ const MyTrips: React.FC = () => {
         <div className="flex flex-wrap gap-4">
           <AddBoard addBoard={addBoard} />
           {myBoards.map((board) => (
-            <Board key={board.id} {...board} />
+            <Suspense fallback={<div>Loading...</div>} key={board.id}>
+              <Board {...board} />
+            </Suspense>
           ))}
         </div>
       </div>
