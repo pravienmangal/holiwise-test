@@ -5,3 +5,11 @@ export interface Destination {
   favourite: boolean
   category?: string
 }
+
+export interface Board {
+  id: string
+  name: string
+  description: string
+  avatar: string
+  destinations?: Destination[]
+}

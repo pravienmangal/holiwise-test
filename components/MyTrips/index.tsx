@@ -1,24 +1,73 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import DraggableCard from '@/components/DraggableCard'
 import Board from './Board'
+import AddBoard from '../AddBoard'
+import { Destination, Board as BoardType } from './MyTrips.types'
+import { envConfig } from '@/config/envConfig'
 import { destinations as initialDestinations } from '@/data/destnations'
 
+const { baseURL, boards } = envConfig
+
 const MyTrips: React.FC = () => {
+  const [myBoards, setMyBoards] = useState<BoardType[]>([])
+
+  useEffect(() => {
+    const fetchBoards = async () => {
+      try {
+        const response = await fetch(`${baseURL}${boards}`)
+        if (!response.ok) throw new Error('Failed to fetch boards')
+        const data = await response.json()
+        setMyBoards(data)
+      } catch (error) {
+        console.error('Error fetching boards:', error)
+      }
+    }
+
+    fetchBoards()
+  }, [])
+
+  const addBoard = async (name: string, description: string) => {
+    try {
+      const response = await fetch(`${baseURL}${boards}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, description }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create new board')
+      }
+
+      const newBoard = await response.json()
+      setMyBoards((prev) => [...prev, newBoard])
+    } catch (error) {
+      console.error('Error creating board:', error)
+    }
+  }
+
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex flex-col space-y-4">
-        <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-x-6 md:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5">
+      <div className="mt-4 p-4 mb-20">
+        <h2 className="text-2xl font-semibold mb-6">My Boards</h2>
+        <div className="flex flex-wrap gap-4">
+          <AddBoard addBoard={addBoard} />
+          {myBoards.map((board) => (
+            <Board key={board.id} {...board} />
+          ))}
+        </div>
+      </div>
+      <div className="flex flex-col space-y-4 px-4">
+        <h2 className="text-2xl font-semibold mb-2">My saved destinations</h2>
+        <div className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3">
           {initialDestinations.map((destination) => (
             <DraggableCard key={destination.id} {...destination} />
           ))}
-        </div>
-        <div className="mt-4 p-4">
-          <h2 className="text-xl font-semibold mb-2">My Board</h2>
-          <Board />
         </div>
       </div>
     </DndProvider>

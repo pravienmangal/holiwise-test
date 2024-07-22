@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation' // Import useRouter for navigation
 import { useSearchParams } from 'next/navigation'
-import { ArrowLeft } from 'react-feather'
+import { ArrowLeft, Trash2 } from 'react-feather'
 import Link from 'next/link'
 
 import ImageCard from '@/components/ImageCard'
@@ -10,12 +11,12 @@ import Modal from '@/components/Modal'
 import { Destination } from '@/components/MyTrips/MyTrips.types'
 import { envConfig } from '@/config/envConfig'
 
-const { baseURL, droppedItems } = envConfig
-const API_URL = `${baseURL}${droppedItems}`
+const { baseURL } = envConfig
 
 export default function Board() {
   const searchParams = useSearchParams()
   const items = searchParams.get('items')
+  const boardId = searchParams.get('id') // Get board ID from query params
 
   const [destinations, setDestinations] = useState<Destination[]>(() => {
     let initialDestinations: Destination[] = []
@@ -28,10 +29,47 @@ export default function Board() {
     }
     return initialDestinations
   })
+  const [boardDetails, setBoardDetails] = useState<{
+    name: string
+    description: string
+  } | null>(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false) // State for delete confirmation modal
   const [destinationToRemove, setDestinationToRemove] =
     useState<Destination | null>(null)
+
+  const router = useRouter() // Initialize useRouter for navigation
+
+  useEffect(() => {
+    if (boardId) {
+      const fetchBoardDetails = async () => {
+        try {
+          const response = await fetch(`${baseURL}/boards/${boardId}`)
+          const data = await response.json()
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch board data')
+          }
+
+          setBoardDetails({
+            name: data.name,
+            description: data.description,
+          })
+
+          setDestinations(data.destinations || [])
+        } catch (error) {
+          console.error('Error fetching board data:', error)
+        }
+      }
+
+      fetchBoardDetails()
+    }
+  }, [boardId])
+
+  useEffect(() => {
+    console.log('boardId:', boardId)
+  }, [boardId])
 
   const handleRemoveClick = (destination: Destination) => {
     setDestinationToRemove(destination)
@@ -39,34 +77,49 @@ export default function Board() {
   }
 
   const handleConfirmRemove = async () => {
-    if (destinationToRemove) {
+    if (destinationToRemove && boardId) {
       try {
-        const deleteResponse = await fetch(
-          `${API_URL}/${destinationToRemove.id}`,
-          {
-            method: 'DELETE',
-          }
+        const boardResponse = await fetch(`${baseURL}/boards/${boardId}`)
+        const boardData = await boardResponse.json()
+
+        if (!boardResponse.ok) {
+          throw new Error('Failed to fetch board data')
+        }
+
+        const updatedDestinations = boardData.destinations.filter(
+          (dest: Destination) => dest.id !== destinationToRemove.id
         )
 
-        if (deleteResponse.ok) {
-          const updatedDestinations = destinations.filter(
-            (dest) => dest.id !== destinationToRemove.id
-          )
+        const updateResponse = await fetch(`${baseURL}/boards/${boardId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...boardData,
+            destinations: updatedDestinations,
+          }),
+        })
+
+        if (updateResponse.ok) {
           setDestinations(updatedDestinations)
+          const newItemsParam = encodeURIComponent(
+            JSON.stringify(updatedDestinations)
+          )
+          window.history.replaceState(
+            null,
+            '',
+            `?items=${newItemsParam}&id=${boardId}`
+          )
 
           localStorage.setItem(
             'droppedItems',
             JSON.stringify(updatedDestinations)
           )
-
-          const newItemsParam = encodeURIComponent(
-            JSON.stringify(updatedDestinations)
-          )
-          window.history.replaceState(null, '', `?items=${newItemsParam}`)
         } else {
           console.error(
-            'Failed to delete item from API:',
-            await deleteResponse.text()
+            'Failed to update board with new destinations:',
+            await updateResponse.text()
           )
         }
       } catch (error) {
@@ -83,14 +136,48 @@ export default function Board() {
     setDestinationToRemove(null)
   }
 
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (boardId) {
+      try {
+        const deleteResponse = await fetch(`${baseURL}/boards/${boardId}`, {
+          method: 'DELETE',
+        })
+
+        if (deleteResponse.ok) {
+          router.push('/') // Navigate to home page
+        } else {
+          console.error('Failed to delete board:', await deleteResponse.text())
+        }
+      } catch (error) {
+        console.error('Error deleting board:', error)
+      } finally {
+        setIsDeleteModalOpen(false)
+      }
+    }
+  }
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false)
+  }
+
   return (
     <div className="flex flex-col py-14">
       <div className="flex justify-between items-center mb-20">
         <Link href="/">
           <ArrowLeft />
         </Link>
-        <div className="flex flex-col items-center">
-          <h1 className="mb-3 text-4xl font-semibold">My Board</h1>
+        <div className="flex items-center">
+          <h1 className="mb-3 text-4xl font-semibold">{boardDetails?.name}</h1>
+          <button
+            onClick={handleDeleteClick}
+            className="ml-4 p-1 border text-gray-500 rounded"
+          >
+            <Trash2 width={20} height={20} />
+          </button>
         </div>
         <h2 className="mt-3.5 text-gray-500">Invite Collaborators</h2>
       </div>
@@ -123,6 +210,13 @@ export default function Board() {
         description="If you remove this destination from your trip, it will be deleted for all trip collaborators and you will lose all the votes. You can add it again later."
         onConfirm={handleConfirmRemove}
         onCancel={handleCancelRemove}
+      />
+      <Modal
+        isOpen={isDeleteModalOpen}
+        title={`Delete Board: ${boardDetails?.name}?`}
+        description="Are you sure you want to delete this board? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
       />
     </div>
   )

@@ -19,12 +19,12 @@ const ImageCard: React.FC<ImageCardProps> = ({
   const isSecondary = variation === 'secondary'
   return (
     <div
-      className={`relative flex flex-col w-full h-full rounded-[11px] overflow-hidden ${
+      className={`relative flex flex-col w-full h-[full] rounded-[11px] overflow-hidden ${
         isSecondary && 'rounded-br-none rounded-bl-none'
       }`}
     >
       <div
-        className={`relative w-full h-40 bg-cover bg-center rounded-[11px] ${
+        className={`relative w-full h-60 bg-cover bg-center rounded-[11px] ${
           isSecondary &&
           'rounded-br-none rounded-bl-none shadow-md shadow-black'
         }`}
@@ -49,7 +49,7 @@ const ImageCard: React.FC<ImageCardProps> = ({
           </div>
         )}
       </div>
-      {!isSecondary && <div className="font-semibold">{title}</div>}
+      {!isSecondary && <div className="font-semibold mt-3">{title}</div>}
       {votes && (
         <div className="flex font-semibold items-center">
           <div className="flex mr-2 p-1 font-semibold bg-gray-100 border rounded-[11px] cursor-pointer">
