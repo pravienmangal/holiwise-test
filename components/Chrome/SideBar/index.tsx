@@ -49,7 +49,7 @@ export default function Sidebar() {
           </div>
         </div>
         <div className="pt-4 px-4 border-b-2">
-          <button onClick={handleCollapse}>
+          <button onClick={handleCollapse} aria-label="Collapse menu">
             <div className="flex pt-4 pb-2">
               <AlignLeft className="stroke-content-secondary peer-disabled:stroke-grey-light" />
               {!collapsed && (
@@ -75,12 +75,10 @@ export default function Sidebar() {
           </ul>
         </div>
 
-        <button onClick={() => {}}>
-          <div className="flex px-4 pt-4 pb-2">
-            <LogOut className="stroke-content-secondary peer-disabled:stroke-grey-light" />
-            {!collapsed && <p className="text-sm ml-2">Log out</p>}
-          </div>
-        </button>
+        <div className="flex px-4 pt-4 pb-2">
+          <LogOut className="stroke-content-secondary peer-disabled:stroke-grey-light" />
+          {!collapsed && <p className="text-sm ml-2">Log out</p>}
+        </div>
       </nav>
     </aside>
   )

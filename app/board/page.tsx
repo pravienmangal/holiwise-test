@@ -172,6 +172,7 @@ const BoardContent = () => {
           <h1 className="mb-3 text-4xl font-semibold">{boardDetails?.name}</h1>
           <button
             onClick={handleDeleteClick}
+            aria-label="Delete board"
             className="ml-4 p-1 border text-gray-500 rounded"
           >
             <Trash2 width={20} height={20} />

@@ -83,7 +83,11 @@ const BoardContent: React.FC<BoardProps> = ({ id, name, description }) => {
 
   return (
     <div className="flex flex-col items-center justify-between">
-      <button onClick={handleClick} className="relative">
+      <button
+        onClick={handleClick}
+        aria-label="Drop items here"
+        className="relative"
+      >
         <div
           ref={drop as unknown as React.RefObject<HTMLDivElement>}
           className="min-w-[350px] h-[250px] flex flex-col justify-between relative cursor-pointer"

@@ -20,6 +20,7 @@ const AddBoard: React.FC<AddBoardProps> = ({ addBoard }) => {
     <div>
       <button
         onClick={() => setModalOpen(true)}
+        aria-label="Create new trip"
         className="flex flex-col items-center justify-center min-w-[350px] h-[250px] bg-gray-200 border border-dashed border-gray-400 rounded-lg cursor-pointer"
       >
         <Plus size={48} />
